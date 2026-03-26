@@ -1,0 +1,137 @@
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "shopping-list-backend"
+version = "0.1.0"
+description = "Backend for shopping list app"
+authors = ["Shopping List Team"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "~3.13"
+aiohttp = "^3.9.5"
+aiohttp-cors = "^0.7.0"
+asyncpg = "^0.30.0"
+pyjwt = "^2.8.0"
+bcrypt = "^4.1.3"
+python-dotenv = "^1.0.1"
+sqlalchemy = "^2.0.48"
+serpyco-rs = "^1.17.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.15.7"
+mypy = "^1.19.1"
+
+[tool.mypy]
+python_version = "3.13"
+explicit_package_bases = true
+check_untyped_defs = true
+disallow_any_explicit = false
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+ignore_errors = false
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+
+[tool.ruff]
+line-length = 120
+src = ["src", "."]
+exclude = ["pyproject.toml", ".venv"]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "F", # Pyflakes
+    "E", # Pycodestyle Error
+    "W", # PycodeStyle Warning
+    "I", # Isort
+    "N", # pep8-naming
+    "UP", # pyupgrade
+    "YTT", # flake8-2020
+    "ANN", # flake8-annotations
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    "ISC", # flake8-implicit-str-concat
+    "ICN", # flake8-import-conventions
+    "LOG", # flake8-logging
+    "G", # flake8-logging-format
+    "PIE", # flake8-pie
+    "T20", # flake8-print
+    "PT", # flake8-pytest-style
+    "PYI", # flake8-pyi
+    "Q", # flake8-quotes
+    "RSE", # flake8-raise
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "TID", # flake8-tidy-imports
+    "PTH", # flake8-use-pathlib
+    "TD", # flake8-todos
+    "PGH", # pygrep-hooks
+    "PL", # Pylint
+    "TRY", # tryceratops
+    "RUF",  # Ruff-specific rules
+]
+ignore = [
+    "UP040", # non-pep695-type-alias
+    "ANN401", # any-type
+    "B005", # strip-with-multi-characters
+    "B905", # zip-without-explicit-strict
+    "N818", # error-suffix-on-exception-name
+    "ISC001", # single-line-implicit-string-concatenation
+    "PT011", # pytest-raises-too-broad
+    "PT019", # pytest-fixture-param-without-value
+    "PT030", # pytest-warns-too-broad
+    "Q003", # avoidable-escaped-quote
+    "SIM108", # if-else-block-instead-of-if-exp
+    "SIM212", # if-expr-with-twisted-arms
+    "PTH123", # builtin-open
+    "TD002",  # missing-todo-author
+    "PLR0911", # too-many-return-statements
+    "PLR0912", # too-many-branches
+    "PLR0913", # too-many-arguments
+    "PLR0915", # too-many-statements
+    "PLR2004", # magic-value-comparison
+    "PLW1641", # eq-without-hash
+    "PLW2901", # redefined-loop-name
+    "SIM300", # yoda-conditions
+    "PGH004", # blanket-noqa
+    "TRY002", # raise-vanilla-class
+    "TRY003", # raise-vanilla-args
+    "RUF001", # ambiguous-unicode-character-string
+    "RUF002", # ambiguous-unicode-character-docstring
+    "RUF003", # ambiguous-unicode-character-comment
+    "RUF005", # collection-literal-concatenation
+    "RUF006", # asyncio-dangling-task
+    "RUF012", # mutable-class-default
+    "RET504", # unnecessary-assign
+]
+extend-safe-fixes = [
+    "ANN", # flake8-annotations
+    "ICN", # flake8-import-conventions
+    "PT", # flake8-pytest-style
+    "TID252", # relative-imports
+    "RUF032", # decimal-from-float-literal
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+    "F401", # unused-import
+]
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+lines-after-imports = 2
+no-lines-before = ["local-folder"]
+
+[tool.ruff.format]
+quote-style = "single"

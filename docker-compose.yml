@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: shopping-list-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: shoplist_app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./docker/postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d shoplist_app']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: shopping-list-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/shoplist_app
+      JWT_SECRET: super-secret-key-change-in-production
+      HOST: 0.0.0.0
+      PORT: 8080
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    image: postgres:16-alpine
+    container_name: shopping-list-migrate
+    environment:
+      PGPASSWORD: postgres
+    command: ['sh', '-c', 'psql -h db -U postgres -d shoplist_app -f /schema.sql']
+    volumes:
+      - ./backend/database/schema.sql:/schema.sql:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: shopping-list-nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
