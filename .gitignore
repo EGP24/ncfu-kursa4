@@ -24,8 +24,10 @@ htmlcov/
 venv/
 env/
 
-# Backend secrets/config
+# Environment secrets/config
+.env
 backend/.env
+!.env.example
 
 # Node / Frontend
 frontend/node_modules/

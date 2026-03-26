@@ -26,6 +26,8 @@
 
 ```
 kursa4-2/
+├── .env.example             # Шаблон переменных окружения
+├── .env                     # Локальные секреты (не коммитится)
 ├── Makefile                 # Общие команды для backend/frontend
 ├── docker-compose.yml       # Оркестрация всех сервисов
 ├── Dockerfile.nginx         # Сборка frontend + Nginx runtime
@@ -43,7 +45,6 @@ kursa4-2/
 │   ├── pyproject.toml       # Poetry-конфигурация и зависимости
 │   ├── poetry.lock          # Зафиксированные версии зависимостей
 │   ├── poetry.toml          # Настройки Poetry (venv в ./.venv)
-│   ├── .env                 # Переменные окружения
 │   └── routes/
 │       ├── user_routes.py   # Регистрация, логин
 │       ├── list_routes.py   # CRUD списков, шаринг, история
@@ -87,6 +88,12 @@ kursa4-2/
 ```bash
 cd kursa4-2
 
+# Создать локальный .env из шаблона
+cp .env.example .env
+
+# Заполнить секреты и параметры окружения
+nano .env
+
 # Собрать и запустить все сервисы
 make docker-up
 ```
@@ -101,7 +108,7 @@ make docker-up
 
 Схема БД накатывается автоматически отдельным Docker-сервисом `migrate` из файла `backend/database/schema.sql`.
 
-Перед деплоем измени `JWT_SECRET` и креды PostgreSQL в `docker-compose.yml`.
+Перед деплоем измени `JWT_SECRET` и креды PostgreSQL в `.env`.
 
 Полезные команды:
 
@@ -136,17 +143,24 @@ psql postgresql://<ваш_пользователь>@localhost/shoplist_app -f ba
 
 ### 4. Настройка переменных окружения
 
-Отредактируйте файл `backend/.env` под свою конфигурацию PostgreSQL:
+Создайте `.env` из шаблона и отредактируйте его под свою конфигурацию PostgreSQL:
+
+```bash
+cp .env.example .env
+nano .env
+```
 
 ```dotenv
-DATABASE_URL=postgresql://<ваш_пользователь>@localhost/shoplist_app
+POSTGRES_DB=shoplist_app
+POSTGRES_USER=<ваш_пользователь>
+POSTGRES_PASSWORD=<пароль_пользователя>
 JWT_SECRET=super-secret-key-change-in-production
 HOST=0.0.0.0
 PORT=8080
 ```
 
 - `<ваш_пользователь>` — имя пользователя PostgreSQL (обычно совпадает с системным).
-- Если PostgreSQL требует пароль: `postgresql://user:password@localhost:5432/shoplist_app`
+- `DATABASE_URL` можно не задавать: backend соберет его автоматически из `POSTGRES_*`.
 
 ### 5. Установка и запуск бэкенда (Poetry + uv)
 

@@ -321,7 +321,20 @@ export default function ListDetailPage() {
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(shareLink);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareLink);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = shareLink;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {

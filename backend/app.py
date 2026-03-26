@@ -29,22 +29,25 @@ async def on_cleanup(app: web.Application) -> None:
 
 def create_app() -> web.Application:
     app = web.Application()
-    app.on_startup.append(on_startup)  # type: ignore[arg-type]
-    app.on_cleanup.append(on_cleanup)  # type: ignore[arg-type]
+    app.on_startup.append(on_startup)
+    app.on_cleanup.append(on_cleanup)
 
     app.router.add_routes(user_routes)
     app.router.add_routes(list_routes)
     app.router.add_routes(item_routes)
     app.router.add_routes(ws_routes)
 
-    cors = aiohttp_cors.setup(app, defaults={
-        '*': aiohttp_cors.ResourceOptions(
-            allow_credentials=True,
-            expose_headers='*',
-            allow_headers='*',
-            allow_methods='*',
-        )
-    })
+    cors = aiohttp_cors.setup(
+        app,
+        defaults={
+            '*': aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers='*',
+                allow_headers='*',
+                allow_methods='*',
+            )
+        },
+    )
     for route in list(app.router.routes()):
         with suppress(ValueError):
             cors.add(route)
@@ -55,4 +58,3 @@ def create_app() -> web.Application:
 if __name__ == '__main__':
     application = create_app()
     web.run_app(application, host=HOST, port=PORT)
-

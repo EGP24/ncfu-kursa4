@@ -274,13 +274,13 @@ async def _get_target_order_for_sort(
     mode: ItemSortMode,
     current_items: list[Item],
 ) -> list[Item]:
-    if mode is ItemSortMode.manual:
+    if mode == ItemSortMode.manual:
         return await item_repo.get_items_by_list_id(db, list_id=list_id, use_manual_position=True)
 
-    if mode is ItemSortMode.unchecked_first:
+    if mode == ItemSortMode.unchecked_first:
         return sorted(current_items, key=lambda item: (item.checked, item.position, item.id))
 
-    if mode is ItemSortMode.name_asc:
+    if mode == ItemSortMode.name_asc:
         return sorted(current_items, key=lambda item: (item.name.casefold(), item.position, item.id))
 
     return current_items
