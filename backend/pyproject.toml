@@ -23,10 +23,15 @@ serpyco-rs = "^1.17.1"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.15.7"
 mypy = "^1.19.1"
+pytest = "^8.4.2"
+pytest-asyncio = "^1.2.0"
+testcontainers = {extras = ["postgres"], version = "^4.13.2"}
+pytest-cov = "^7.1.0"
 
 [tool.mypy]
 python_version = "3.13"
 explicit_package_bases = true
+exclude = "^(tests|tests_functional)/"
 check_untyped_defs = true
 disallow_any_explicit = false
 disallow_untyped_calls = true
@@ -123,6 +128,12 @@ extend-safe-fixes = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = [
     "F401", # unused-import
+
+]
+"tests*/**/*.py" = [
+    "N", # pep8-naming
+    "UP026", # deprecated-mock-import
+    "ANN", # flake8-annotations
 ]
 
 [tool.ruff.lint.flake8-quotes]
@@ -135,3 +146,8 @@ no-lines-before = ["local-folder"]
 
 [tool.ruff.format]
 quote-style = "single"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"

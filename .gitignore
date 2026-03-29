@@ -26,7 +26,6 @@ env/
 
 # Environment secrets/config
 .env
-backend/.env
 !.env.example
 
 # Node / Frontend

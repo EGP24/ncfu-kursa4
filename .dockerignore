@@ -7,5 +7,4 @@
 **/node_modules
 frontend/dist
 docker/postgres-data
-backend/.env
 .env

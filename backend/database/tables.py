@@ -18,7 +18,7 @@ lists_table = sa.Table(
     sa.Column('id', sa.BIGINT, primary_key=True),
     sa.Column('title', sa.VARCHAR, nullable=False),
     sa.Column('owner_id', sa.BIGINT, nullable=False),
-    sa.Column('share_token', sa.VARCHAR, nullable=False, unique=True),
+    sa.Column('share_token', sa.VARCHAR, nullable=True, unique=True),
     sa.Column('is_deleted', sa.BOOLEAN, nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(timezone=True), nullable=False),
