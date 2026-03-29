@@ -7,6 +7,7 @@ from typing import (
 from aiohttp import web
 from multidict import MultiDict
 
+from app_keys import DB_KEY, WS_CLIENTS_KEY
 from auth import get_token_from_cookie, get_user_from_request, require_auth
 from web.introspection import _deserialize_user_value, _get_serializer
 from web.signature import HandlerSpec
@@ -39,10 +40,10 @@ async def _resolve_common_kwargs(
         kwargs[spec.ws_client_param_name] = ws_client
 
     if spec.ws_clients_param_name is not None:
-        kwargs[spec.ws_clients_param_name] = request.app.setdefault('ws_clients', {})
+        kwargs[spec.ws_clients_param_name] = request.app.setdefault(WS_CLIENTS_KEY, {})
 
     if spec.db_param_name is not None:
-        kwargs[spec.db_param_name] = request.app['db']
+        kwargs[spec.db_param_name] = request.app[DB_KEY]
 
     if spec.optional_user_param_name is not None:
         raw_user = await get_user_from_request(request)

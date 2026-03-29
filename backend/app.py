@@ -4,6 +4,7 @@ from contextlib import suppress
 import aiohttp_cors
 from aiohttp import web
 
+from app_keys import DB_KEY, WS_CLIENTS_KEY
 from config import DATABASE_URL, HOST, PORT
 from database.simple import Database
 from routes.item_routes import routes as item_routes
@@ -13,15 +14,15 @@ from routes.ws_routes import routes as ws_routes
 
 
 async def on_startup(app: web.Application) -> None:
-    app['db'] = await Database(dsn=DATABASE_URL)
-    app['ws_clients'] = {}
+    app[DB_KEY] = await Database(dsn=DATABASE_URL)
+    app[WS_CLIENTS_KEY] = {}
 
 
 async def on_cleanup(app: web.Application) -> None:
-    ws_clients = app.get('ws_clients', {})
+    ws_clients = app.get(WS_CLIENTS_KEY, {})
     tasks = [ws.close() for clients in ws_clients.values() for ws in clients]
 
-    if db := app.get('db'):
+    if db := app.get(DB_KEY):
         tasks.append(db.close())
 
     await asyncio.gather(*tasks)

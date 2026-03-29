@@ -42,12 +42,7 @@ async def raw_db_pool(postgres_dsn: str) -> AsyncIterator[asyncpg.Pool]:
     pool = None
     for _ in range(30):
         with suppress(Exception):
-            pool = await asyncpg.create_pool(
-                postgres_dsn,
-                ssl=False,
-                min_size=1,
-                max_size=5,
-            )
+            pool = await asyncpg.create_pool(postgres_dsn, ssl=False, min_size=1, max_size=5)
             break
         await asyncio.sleep(1)
 

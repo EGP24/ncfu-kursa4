@@ -1,0 +1,91 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  backend:
+    name: Backend lint + tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install Poetry
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: poetry install --no-interaction --no-ansi
+
+      - name: Run backend lint
+        working-directory: backend
+        run: poetry run ruff check .
+
+      - name: Run backend tests
+        working-directory: backend
+        env:
+          TESTCONTAINERS_RYUK_DISABLED: 'true'
+        run: poetry run pytest tests tests_functional --cov=. --cov-report=term-missing
+
+  frontend:
+    name: Frontend tests + build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm run test
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+  deploy:
+    name: Auto deploy to server
+    runs-on: ubuntu-latest
+    needs:
+      - backend
+      - frontend
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+            git pull origin master
+            docker compose up -d --build
+            docker image prune -f
