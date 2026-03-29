@@ -1,4 +1,4 @@
-.PHONY: backend-setup backend-lock backend-install backend-run backend-lint backend-typecheck backend-check
+.PHONY: backend-setup backend-lock backend-install backend-run backend-test backend-lint backend-typecheck backend-check
 .PHONY: frontend-install frontend-run frontend-build
 .PHONY: docker-up docker-down docker-logs docker-build
 
@@ -13,6 +13,9 @@ backend-install:
 
 backend-run:
 	$(MAKE) -C backend run
+
+backend-test:
+	$(MAKE) -C backend test
 
 backend-lint:
 	$(MAKE) -C backend lint

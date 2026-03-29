@@ -1,4 +1,4 @@
-.PHONY: setup lock install run lint typecheck check
+.PHONY: setup lock install run test lint typecheck check
 
 setup:
 	uv python install 3.13
@@ -14,6 +14,9 @@ install:
 
 run:
 	poetry run python app.py
+
+test:
+	poetry run pytest tests tests_functional --cov=. --cov-report=term-missing
 
 lint:
 	poetry run ruff check .
