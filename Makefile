@@ -18,7 +18,7 @@ backend-test:
 	$(MAKE) -C backend test
 
 backend-lint:
-	$(MAKE) -C backend lint
+	$(MAKE) -C backend lint ARGS="$(ARGS)"
 
 backend-typecheck:
 	$(MAKE) -C backend typecheck

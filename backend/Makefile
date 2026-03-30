@@ -19,7 +19,7 @@ test:
 	poetry run pytest tests tests_functional --cov=. --cov-report=term-missing
 
 lint:
-	poetry run ruff check .
+	poetry run ruff check . $(ARGS)
 
 typecheck:
 	poetry run mypy . --config-file pyproject.toml --explicit-package-bases

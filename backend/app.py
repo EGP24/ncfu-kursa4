@@ -14,7 +14,10 @@ from routes.ws_routes import routes as ws_routes
 
 
 async def on_startup(app: web.Application) -> None:
-    app[DB_KEY] = await Database(dsn=DATABASE_URL)
+    if (db := await Database(dsn=DATABASE_URL)) is None:
+        raise RuntimeError('Failed to initialize database pool')
+
+    app[DB_KEY] = db
     app[WS_CLIENTS_KEY] = {}
 
 
