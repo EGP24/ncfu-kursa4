@@ -12,7 +12,7 @@ from tests_functional.constants import SCHEMA_PATH
 
 @pytest.fixture(scope='session')
 async def postgres_dsn() -> AsyncIterator[str]:
-    os.environ['DOCKER_HOST'] = 'unix:///Users/v.pereverza/.colima/default/docker.sock'
+    # os.environ['DOCKER_HOST'] = 'unix:///Users/v.pereverza/.colima/default/docker.sock'
     os.environ.setdefault('TESTCONTAINERS_RYUK_DISABLED', 'true')
     env_dsn = os.getenv('TEST_DATABASE_URL') or os.getenv('PYTEST_DATABASE_URL')
     if env_dsn:
