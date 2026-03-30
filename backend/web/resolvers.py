@@ -1,13 +1,11 @@
 import json
 from collections.abc import Awaitable, Callable
-from typing import (
-    Any,
-)
+from typing import Any
 
 from aiohttp import web
 from multidict import MultiDict
 
-from app_keys import DB_KEY, WS_CLIENTS_KEY
+from app import DB_KEY, WS_CLIENTS_KEY
 from auth import get_token_from_cookie, get_user_from_request, require_auth
 from web.introspection import _deserialize_user_value, _get_serializer
 from web.signature import HandlerSpec

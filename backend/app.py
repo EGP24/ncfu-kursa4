@@ -4,13 +4,16 @@ from contextlib import suppress
 import aiohttp_cors
 from aiohttp import web
 
-from app_keys import DB_KEY, WS_CLIENTS_KEY
 from config import DATABASE_URL, HOST, PORT
 from database.simple import Database
 from routes.item_routes import routes as item_routes
 from routes.list_routes import routes as list_routes
 from routes.user_routes import routes as user_routes
 from routes.ws_routes import routes as ws_routes
+
+
+DB_KEY = 'db'
+WS_CLIENTS_KEY = 'ws_clients'
 
 
 async def on_startup(app: web.Application) -> None:
