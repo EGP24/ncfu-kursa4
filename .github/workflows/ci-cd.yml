@@ -39,6 +39,10 @@ jobs:
         working-directory: backend
         env:
           TESTCONTAINERS_RYUK_DISABLED: 'true'
+          DATABASE_URL: postgresql://test:test@localhost:5432/test_db
+          JWT_SECRET: test-secret-key-for-ci-1234567890
+          HOST: 127.0.0.1
+          PORT: '8080'
         run: poetry run pytest tests tests_functional --cov=. --cov-report=term-missing
 
   frontend:
