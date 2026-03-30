@@ -9,19 +9,24 @@ from aiohttp.test_utils import TestClient, TestServer
 from tests_functional.constants import BACKEND_DIR, JWT_TEST_SECRET
 
 
+@pytest.fixture(scope='session')
+def functional_test_env(postgres_dsn: str) -> None:
+    os.environ['DATABASE_URL'] = postgres_dsn
+    os.environ['JWT_SECRET'] = JWT_TEST_SECRET
+    os.environ.setdefault('HOST', '127.0.0.1')
+    os.environ.setdefault('PORT', '8080')
+
+    if str(BACKEND_DIR) not in sys.path:
+        sys.path.insert(0, str(BACKEND_DIR))
+
+
 @pytest.fixture
 def jwt_secret():
     return JWT_TEST_SECRET
 
 
 @pytest.fixture(scope='session')
-def app_module(postgres_dsn: str):
-    os.environ['DATABASE_URL'] = postgres_dsn
-    os.environ['JWT_SECRET'] = JWT_TEST_SECRET
-    os.environ.setdefault('HOST', '127.0.0.1')
-    os.environ.setdefault('PORT', '8080')
-
-    sys.path.insert(0, str(BACKEND_DIR))
+def app_module(functional_test_env: None):
     config = importlib.import_module('config')
     auth = importlib.import_module('auth')
     app = importlib.import_module('app')
