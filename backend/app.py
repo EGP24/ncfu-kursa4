@@ -12,23 +12,19 @@ from routes.user_routes import routes as user_routes
 from routes.ws_routes import routes as ws_routes
 
 
-DB_KEY = 'db'
-WS_CLIENTS_KEY = 'ws_clients'
-
-
 async def on_startup(app: web.Application) -> None:
     if (db := await Database(dsn=DATABASE_URL)) is None:
         raise RuntimeError('Failed to initialize database pool')
 
-    app[DB_KEY] = db
-    app[WS_CLIENTS_KEY] = {}
+    app['db'] = db
+    app['ws_clients'] = {}
 
 
 async def on_cleanup(app: web.Application) -> None:
-    ws_clients = app.get(WS_CLIENTS_KEY, {})
+    ws_clients = app.get('ws_clients', {})
     tasks = [ws.close() for clients in ws_clients.values() for ws in clients]
 
-    if db := app.get(DB_KEY):
+    if db := app.get('db'):
         tasks.append(db.close())
 
     await asyncio.gather(*tasks)
