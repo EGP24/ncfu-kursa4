@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import re
 from collections.abc import Generator
 from typing import Any
@@ -31,7 +29,7 @@ class Database:
 
         self._dialect = postgresql.dialect()  # type: ignore[no-untyped-call]
 
-    async def __ainit__(self) -> None | Database:
+    async def __ainit__(self) -> 'Database | None':
         if self._pool is not None:
             return None
 
@@ -43,7 +41,7 @@ class Database:
         )
         return self
 
-    def __await__(self) -> Generator[Any, None, Database | None]:
+    def __await__(self) -> Generator[Any, None, 'Database | None']:
         return self.__ainit__().__await__()
 
     @property
