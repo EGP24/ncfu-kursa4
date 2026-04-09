@@ -16,7 +16,7 @@ run:
 	poetry run python app.py
 
 test:
-	poetry run pytest tests tests_functional --cov=. --cov-report=term-missing
+	poetry run pytest tests tests_functional --cov=. --cov-report=term-missing:skip-covered
 
 lint:
 	poetry run ruff check . $(ARGS)

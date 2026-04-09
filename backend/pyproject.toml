@@ -152,3 +152,15 @@ quote-style = "single"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
 asyncio_default_test_loop_scope = "session"
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+    "tests_functional/*",
+]
+
+[tool.coverage.report]
+omit = [
+    "tests/*",
+    "tests_functional/*",
+]

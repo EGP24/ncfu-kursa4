@@ -43,7 +43,3 @@ CREATE TABLE IF NOT EXISTS list_history (
     CONSTRAINT list_history_item_id_fk FOREIGN KEY(item_id) REFERENCES items(id),
     CONSTRAINT list_history_actor_id_fk FOREIGN KEY(actor_id) REFERENCES users(id)
 );
-
-ALTER TABLE items ADD COLUMN IF NOT EXISTS manual_position BIGINT;
-UPDATE items SET manual_position = position WHERE manual_position IS NULL;
-ALTER TABLE items ALTER COLUMN manual_position SET NOT NULL;
